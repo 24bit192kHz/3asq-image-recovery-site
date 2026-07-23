@@ -1,7 +1,7 @@
 category,status,count,percentage
-Live + Archived,archived,256071,70.02%
+Live + Archived,archived,256114,70.02%
 Broken + Recoverable (Wayback has it),recoverable,20873,5.71%
-Broken + Permanently Lost,lost,87538,23.94%
+Broken + Permanently Lost,lost,87538,23.93%
 Live + Not Yet Archived,pending,1,0.00%
 Imgur Deleted + Recoverable,deleted_archived,0,0.00%
 Imgur Deleted + Permanently Lost,deleted_lost,1223,0.33%
