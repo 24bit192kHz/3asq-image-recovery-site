@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>3asq Image Recovery Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f4; --card:#ffffff; --card2:#fafbfa;
+  --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --acc:#059669; --acc-soft:rgba(5,150,105,.09);
+  --blue:#2563eb; --red:#dc2626; --amber:#d97706; --purp:#7c3aed; --darkred:#991b1b;
+  --shadow:0 1px 3px rgba(16,24,40,.07),0 1px 2px rgba(16,24,40,.05);
+  --display:'Space Grotesk',sans-serif; --mono:'IBM Plex Mono',monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#111827; --card:#1f2937; --card2:#243041;
+    --ink:#f3f4f6; --muted:#9ca3af; --line:#374151;
+    --acc:#34d399; --acc-soft:rgba(52,211,153,.12);
+    --blue:#60a5fa; --red:#f87171; --amber:#fbbf24; --purp:#c084fc; --darkred:#f87171;
+    --shadow:0 1px 3px rgba(0,0,0,.4);
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--display);font-size:14px}
+.wrap{max-width:1150px;margin:0 auto;padding:32px 24px 80px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:13px}
+.leaf{width:42px;height:42px;border-radius:10px;background:var(--acc);display:grid;place-items:center;color:#fff;font-weight:700;font-size:17px}
+h1{font-size:clamp(22px,3.4vw,30px);font-weight:700;letter-spacing:-.02em}
+.tag{font-size:12px;font-weight:500;color:var(--muted);margin-top:3px}
+.datepill{font-family:var(--mono);font-size:11px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 14px;color:var(--muted);box-shadow:var(--shadow)}
+.datepill b{color:var(--acc);font-weight:500}
+.grid-top{display:grid;grid-template-columns:1fr 1.6fr;gap:16px}
+.gauge{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;box-shadow:var(--shadow)}
+.ring{position:relative;width:150px;height:150px}
+.ring svg{transform:rotate(-90deg)}
+.ring .rt{fill:none;stroke:var(--line);stroke-width:13}
+.ring .rf{fill:none;stroke:var(--acc);stroke-width:13;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:27px;font-weight:700}
+.ring b small{font-size:13px;color:var(--muted);margin-left:2px}
+.gauge .glab{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.minor3{display:grid;grid-template-rows:repeat(3,1fr);gap:16px}
+.mstat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:var(--shadow);transition:border-color .15s}
+.mstat:hover{border-color:var(--acc)}
+.mstat .lab{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.mstat .note{font-size:11px;color:var(--muted);margin-top:3px;font-weight:500}
+.mstat .val{font-size:clamp(24px,3vw,34px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.mstat.lead .val{color:var(--acc)}
+section{margin-top:20px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px;flex-wrap:wrap}
+.phead h2{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.phead h2::before{content:"● ";color:var(--acc);font-size:11px;vertical-align:2px}
+.phead .aux{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:6px 12px}
+.dist-bar{display:flex;height:18px;border-radius:9px;overflow:hidden;background:var(--card2);border:1px solid var(--line)}
+.seg{display:block;height:100%;width:0%;transition:width 1s cubic-bezier(.2,.8,.2,1),opacity .2s}
+.dist-bar.dim .seg:not(.hot){opacity:.25}
+.seg.hot{filter:brightness(1.07)}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:10px;margin-top:14px}
+.legend-item{display:grid;grid-template-columns:12px 1fr auto;gap:9px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:11px 13px;transition:border-color .15s}
+.legend-item:hover{border-color:var(--acc)}
+.swatch{width:11px;height:11px;border-radius:3px}
+.legend-label{font-size:12px;font-weight:500;color:var(--muted)}
+.legend-count{font-family:var(--mono);font-size:12.5px;font-weight:500;text-align:right}
+.legend-pct{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);text-align:right;opacity:.8}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+#search{flex:1;min-width:260px;border:1.5px solid var(--line);border-radius:10px;background:var(--card2);padding:13px 16px;font-family:var(--mono);font-size:13px;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+#search:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft);background:var(--card)}
+#search::placeholder{color:var(--muted);opacity:.7}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:11px;padding:9px 14px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer;transition:all .15s}
+.chip small{opacity:.65;margin-left:6px}
+.chip:hover{border-color:var(--acc);color:var(--ink)}
+.chip.active{background:var(--chip-color,#6b7280);border-color:transparent;color:#fff}
+.table-area{position:relative}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:820px}
+thead th{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 15px;background:var(--card2);border-bottom:1px solid var(--line);position:sticky;top:0}
+tbody td{padding:10px 15px;border-bottom:1px solid var(--line);font-size:13px}
+tbody tr:hover td{background:var(--card2)}
+tbody tr:last-child td{border-bottom:none}
+td.manga{font-weight:700}
+td.chapter{font-family:var(--mono);font-size:12px;color:var(--muted)}
+td.url a{font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none}
+td.url a:hover{text-decoration:underline}
+td.status{white-space:nowrap;font-size:12.5px;font-weight:500}
+.dot{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:8px}
+td.archive a{font-family:var(--mono);font-size:11.5px;color:var(--acc);font-weight:500;text-decoration:none}
+td.archive a:hover{text-decoration:underline}
+td.archive .none{color:var(--muted);opacity:.6}
+mark{background:var(--acc-soft);color:var(--acc);border-radius:3px;padding:0 2px;font-weight:600}
+.empty-row{text-align:center;padding:42px 0!important;color:var(--muted);font-weight:500}
+.table-state{padding:46px 16px;text-align:center;color:var(--muted);font-size:12.5px;font-weight:500}
+.spin{display:inline-block;width:13px;height:13px;border:2.5px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:rot .8s linear infinite;vertical-align:-2px;margin-right:9px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.fade-more{display:none;position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,transparent,var(--card) 88%);pointer-events:none;z-index:3;border-radius:0 0 10px 10px}
+.table-area.has-more .fade-more{display:block}
+.more-cta{text-align:center;margin-top:17px}
+#moreBtn{font-family:var(--display);font-size:13px;font-weight:600;padding:12px 30px;border-radius:10px;border:1.5px solid var(--acc);background:transparent;color:var(--acc);cursor:pointer;transition:all .18s}
+#moreBtn:hover{background:var(--acc);color:#fff}
+.more-foot{display:flex;justify-content:space-between;gap:12px;margin-top:13px;flex-wrap:wrap}
+#resultCount{font-family:var(--mono);font-size:12px;color:var(--muted)}
+#resultCount b{color:var(--acc)}
+#shownLabel{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12.5px}
+.c-ok{color:var(--acc)} .c-warn{color:var(--amber)} .c-bad{color:var(--red)}
+td.name{font-weight:700}
+.bar{display:block;width:220px;max-width:100%;height:11px;background:var(--card2);border:1px solid var(--line);border-radius:6px;position:relative;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;left:0;width:0%;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.b-lost{background:var(--red);border-radius:6px 0 0 6px} .b-rec{background:var(--blue);border-radius:0 6px 6px 0}
+footer{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+footer .flab{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+footer a{font-family:var(--mono);font-size:11.5px;color:var(--acc);text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 14px;box-shadow:var(--shadow);transition:border-color .15s}
+footer a:hover{border-color:var(--acc)}
+@media(max-width:900px){.grid-top{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="leaf">3a</div>
+    <div>
+      <h1>3asq Recovery</h1>
+      <div class="tag">Manga image preservation · Wayback safety net</div>
+    </div>
+  </div>
+  <div class="datepill">generated <b id="generatedAt">—</b></div>
+</header>
+
+<div class="grid-top">
+  <div class="gauge">
+    <div class="glab">Archive coverage</div>
+    <div class="ring">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        <circle class="rt" cx="75" cy="75" r="62"></circle>
+        <circle class="rf" id="ringFill" cx="75" cy="75" r="62"></circle>
+      </svg>
+      <b><span id="statCoverage">0</span><small>%</small></b>
+    </div>
+    <div class="glab">of all tracked images</div>
+  </div>
+  <div class="minor3">
+    <div class="mstat lead"><div><div class="lab">Verified archives</div><div class="note">images secured on the Wayback Machine</div></div><div class="val" id="statArchived">0</div></div>
+    <div class="mstat"><div><div class="lab">Tracked images</div><div class="note">references across all chapters</div></div><div class="val" id="statTotal">0</div></div>
+    <div class="mstat"><div><div class="lab">Manga titles</div><div class="note">monitored for new chapters</div></div><div class="val" id="statManga">0</div></div>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="phead"><h2>Status distribution</h2><span class="aux">share of tracked images</span></div>
+  <div class="dist-bar" id="distBar"></div>
+  <div class="legend" id="legend"></div>
+</section>
+
+<section class="panel">
+  <div class="phead"><h2>Missing &amp; attention images</h2><span class="aux" id="indexSize">compressed</span></div>
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search every record — manga, chapter, or URL…" autocomplete="off" spellcheck="false">
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="table-area">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Manga</th><th>Chapter</th><th>Image</th><th>Status</th><th>Archive</th></tr></thead>
+        <tbody id="missingBody"></tbody>
+      </table>
+      <div class="table-state" id="tableState"><span class="spin"></span>Loading the full search index&hellip;</div>
+    </div>
+    <div class="fade-more"></div>
+  </div>
+  <div class="more-cta" id="moreWrap"><button id="moreBtn" type="button">Show 500 more</button></div>
+  <div class="more-foot"><span id="resultCount"></span><span id="shownLabel"></span></div>
+</section>
+
+<section class="panel">
+  <div class="phead"><h2>Top manga by lost images</h2><span class="aux">damage overview</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Manga</th><th class="num">Total</th><th class="num">Archived</th><th class="num">Recoverable</th><th class="num">Lost</th><th>Damage</th></tr></thead>
+      <tbody id="topBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <span class="flab">Exports</span>
+  <a href="report_summary.csv">summary.csv</a>
+  <a href="report_by_manga.csv">by_manga.csv</a>
+  <a href="report_missing.csv">missing.csv</a>
+  <a href="report_pending.csv">pending.csv</a>
+  <a href="report_missing_all.json.gz">full index</a>
+</footer>
+</div>
+<script type="application/json" id="data-summary">{"generated": "2026-07-22 21:53 UTC", "total": 365706, "manga": 391, "archived": 256071, "coverage": 70.02, "categories": [{"status": "archived", "label": "Live + Archived", "color": "#2ecc71", "count": 256071}, {"status": "recoverable", "label": "Broken + Recoverable (Wayback has it)", "color": "#3498db", "count": 20873}, {"status": "lost", "label": "Broken + Permanently Lost", "color": "#e74c3c", "count": 87538}, {"status": "pending", "label": "Live + Not Yet Archived", "color": "#f39c12", "count": 1}, {"status": "deleted_archived", "label": "Imgur Deleted + Recoverable", "color": "#9b59b6", "count": 0}, {"status": "deleted_lost", "label": "Imgur Deleted + Permanently Lost", "color": "#c0392b", "count": 1223}]}</script>
+<script type="application/json" id="data-top">[{"name": "fairy-tail", "total": 5285, "archived": 65, "recoverable": 11, "lost": 5209}, {"name": "shingeki-no-kyojin", "total": 6317, "archived": 1071, "recoverable": 235, "lost": 5011}, {"name": "bleach-2", "total": 5808, "archived": 267, "recoverable": 1588, "lost": 3953}, {"name": "gosu", "total": 3862, "archived": 0, "recoverable": 0, "lost": 3862}, {"name": "the-last-human", "total": 4131, "archived": 0, "recoverable": 384, "lost": 3747}, {"name": "btooom", "total": 3827, "archived": 240, "recoverable": 38, "lost": 3549}, {"name": "tokyo-revengers", "total": 4172, "archived": 0, "recoverable": 1035, "lost": 3137}, {"name": "diamond-no-ace-act-ii", "total": 3439, "archived": 803, "recoverable": 125, "lost": 2511}, {"name": "edens-zero", "total": 2631, "archived": 209, "recoverable": 40, "lost": 2382}, {"name": "bleach", "total": 3260, "archived": 694, "recoverable": 188, "lost": 2378}, {"name": "dr-stone", "total": 2998, "archived": 771, "recoverable": 118, "lost": 2109}, {"name": "area-d-inou-ryouiki", "total": 2085, "archived": 2, "recoverable": 0, "lost": 2083}, {"name": "naruto", "total": 1888, "archived": 0, "recoverable": 0, "lost": 1888}, {"name": "chi-no-wadachi", "total": 2012, "archived": 0, "recoverable": 199, "lost": 1813}, {"name": "ragna-crimson", "total": 1991, "archived": 0, "recoverable": 270, "lost": 1721}, {"name": "magi", "total": 2134, "archived": 519, "recoverable": 95, "lost": 1520}, {"name": "jujutsu-kaisen", "total": 3631, "archived": 57, "recoverable": 2132, "lost": 1442}, {"name": "jojo-no-kimyou-na-bouken-part-8-jojolion", "total": 3152, "archived": 1789, "recoverable": 0, "lost": 1363}, {"name": "yakusoku-no-neverland", "total": 1760, "archived": 352, "recoverable": 93, "lost": 1315}, {"name": "dragon-ball-super", "total": 2115, "archived": 0, "recoverable": 868, "lost": 1247}]</script>
+<script>
+const SUMMARY = JSON.parse(document.getElementById("data-summary").textContent);
+const TOP = JSON.parse(document.getElementById("data-top").textContent);
+const STATUS_META = {
+  lost: {label: "Broken · lost", color: "#dc2626"},
+  recoverable: {label: "Broken · recoverable", color: "#2563eb"},
+  deleted_archived: {label: "Imgur deleted · recoverable", color: "#7c3aed"},
+  deleted_lost: {label: "Imgur deleted · lost", color: "#991b1b"}
+};
+const fmt = n => n.toLocaleString("en-US");
+const $ = id => document.getElementById(id);
+
+document.title = "3asq Recovery — " + fmt(SUMMARY.archived) + " archived";
+$("generatedAt").textContent = SUMMARY.generated;
+
+function countUp(el, target, decimals) {
+  const dur = 1300, t0 = performance.now();
+  function step(t) {
+    const p = Math.min(1, (t - t0) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const v = target * eased;
+    el.textContent = decimals ? v.toFixed(decimals) : fmt(Math.round(v));
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+countUp($("statArchived"), SUMMARY.archived);
+countUp($("statTotal"), SUMMARY.total);
+countUp($("statManga"), SUMMARY.manga);
+countUp($("statCoverage"), SUMMARY.coverage, 1);
+
+const RING_R = 62, RING_C = 2 * Math.PI * RING_R;
+const ringFill = $("ringFill");
+ringFill.style.strokeDasharray = RING_C;
+ringFill.style.strokeDashoffset = RING_C;
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  ringFill.style.strokeDashoffset = RING_C * (1 - SUMMARY.coverage / 100);
+}));
+
+const distBar = $("distBar"), legend = $("legend");
+SUMMARY.categories.forEach(c => {
+  if (!c.count) return;
+  const seg = document.createElement("span");
+  seg.className = "seg";
+  seg.style.background = c.color;
+  seg.dataset.status = c.status;
+  seg.title = c.label + ": " + fmt(c.count) + " (" + (c.count / SUMMARY.total * 100).toFixed(1) + "%)";
+  distBar.appendChild(seg);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    seg.style.width = (c.count / SUMMARY.total * 100) + "%";
+  }));
+  const item = document.createElement("div");
+  item.className = "legend-item";
+  item.dataset.status = c.status;
+  item.innerHTML =
+    '<span class="swatch" style="background:' + c.color + '"></span>' +
+    '<span class="legend-label">' + c.label + "</span>" +
+    '<span class="legend-count">' + fmt(c.count) + "</span>" +
+    '<span class="legend-pct">' + (c.count / SUMMARY.total * 100).toFixed(1) + "%</span>";
+  item.addEventListener("mouseenter", () => {
+    distBar.classList.add("dim");
+    const m = distBar.querySelector('[data-status="' + c.status + '"]');
+    if (m) m.classList.add("hot");
+  });
+  item.addEventListener("mouseleave", () => {
+    distBar.classList.remove("dim");
+    const m = distBar.querySelector('[data-status="' + c.status + '"]');
+    if (m) m.classList.remove("hot");
+  });
+  legend.appendChild(item);
+});
+
+const topBody = $("topBody");
+const maxDamage = Math.max(...TOP.map(t => t.lost + t.recoverable), 1);
+TOP.forEach(t => {
+  const tr = document.createElement("tr");
+  const nameTd = document.createElement("td");
+  nameTd.className = "name";
+  nameTd.textContent = t.name;
+  const num = (v, cls) => {
+    const td = document.createElement("td");
+    td.className = "num" + (cls ? " " + cls : "");
+    td.textContent = fmt(v);
+    return td;
+  };
+  const barTd = document.createElement("td");
+  const bar = document.createElement("span");
+  bar.className = "bar";
+  const lost = document.createElement("i");
+  lost.className = "b-lost";
+  const rec = document.createElement("i");
+  rec.className = "b-rec";
+  rec.style.left = (t.lost / maxDamage * 100) + "%";
+  bar.append(lost, rec);
+  bar.title = fmt(t.lost) + " lost · " + fmt(t.recoverable) + " recoverable";
+  barTd.appendChild(bar);
+  tr.append(nameTd, num(t.total), num(t.archived, "c-ok"), num(t.recoverable, "c-warn"), num(t.lost, "c-bad"), barTd);
+  topBody.appendChild(tr);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    lost.style.width = (t.lost / maxDamage * 100) + "%";
+    rec.style.width = (t.recoverable / maxDamage * 100) + "%";
+  }));
+});
+
+let ALL = [], FILTERED = [], SHOWN = 0, ACTIVE = "all", QUERY = "";
+const INITIAL = 60, STEP = 500;
+const searchEl = $("search"), body = $("missingBody"), stateEl = $("tableState");
+const tableArea = document.querySelector(".table-area");
+
+function tableState(html) { stateEl.hidden = false; stateEl.innerHTML = html; }
+function hideState() { stateEl.hidden = true; }
+
+async function loadIndex() {
+  try {
+    const res = await fetch("report_missing_all.json.gz", {cache: "no-cache"});
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    if (typeof DecompressionStream === "undefined")
+      throw new Error("this browser cannot decompress the index (DecompressionStream unavailable)");
+    const text = await new Response(res.body.pipeThrough(new DecompressionStream("gzip"))).text();
+    const raw = JSON.parse(text);
+    ALL = raw.map(r => { r.h = (r.m + " " + r.c + " " + r.u + " " + r.s).toLowerCase(); return r; });
+    const isz = $("indexSize");
+    if (isz) isz.textContent = fmt(ALL.length) + " records";
+    buildChips();
+    applyFilters();
+  } catch (err) {
+    tableState("Could not load the search index — " + err.message);
+    $("resultCount").textContent = "index unavailable";
+  }
+}
+
+function buildChips() {
+  const counts = {all: ALL.length};
+  for (const r of ALL) counts[r.s] = (counts[r.s] || 0) + 1;
+  const defs = [["all", "All", "#6b7280"]].concat(
+    Object.keys(STATUS_META).map(s => [s, STATUS_META[s].label, STATUS_META[s].color]));
+  const chipsEl = $("chips");
+  defs.forEach(([key, label, color]) => {
+    if (key !== "all" && !counts[key]) return;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip" + (key === ACTIVE ? " active" : "");
+    b.dataset.status = key;
+    b.dataset.color = color;
+    b.innerHTML = label + "<small>" + fmt(counts[key] || 0) + "</small>";
+    if (key === ACTIVE) b.style.setProperty("--chip-color", color);
+    b.addEventListener("click", () => {
+      ACTIVE = key;
+      chipsEl.querySelectorAll(".chip").forEach(c => {
+        const on = c.dataset.status === key;
+        c.classList.toggle("active", on);
+        if (on) c.style.setProperty("--chip-color", c.dataset.color);
+      });
+      applyFilters();
+    });
+    chipsEl.appendChild(b);
+  });
+}
+
+function applyFilters() {
+  const q = QUERY, st = ACTIVE;
+  FILTERED = ALL.filter(r => (st === "all" || r.s === st) && (!q || r.h.includes(q)));
+  render();
+}
+
+function markMatch(cell, text, q) {
+  cell.textContent = "";
+  if (!q) { cell.textContent = text; return; }
+  const lower = text.toLowerCase();
+  let i = 0, idx;
+  while ((idx = lower.indexOf(q, i)) !== -1) {
+    cell.append(text.slice(i, idx));
+    const mk = document.createElement("mark");
+    mk.textContent = text.slice(idx, idx + q.length);
+    cell.append(mk);
+    i = idx + q.length;
+  }
+  cell.append(text.slice(i));
+}
+
+function buildRow(r) {
+  const tr = document.createElement("tr");
+  const tdM = document.createElement("td"); tdM.className = "manga"; markMatch(tdM, r.m, QUERY);
+  const tdC = document.createElement("td"); tdC.className = "chapter"; markMatch(tdC, r.c, QUERY);
+  const tdU = document.createElement("td"); tdU.className = "url";
+  const a = document.createElement("a");
+  a.href = r.u; a.target = "_blank"; a.rel = "noopener"; a.title = r.u;
+  a.textContent = r.u.length > 64 ? "…" + r.u.slice(-60) : r.u;
+  tdU.appendChild(a);
+  const tdS = document.createElement("td"); tdS.className = "status";
+  const meta = STATUS_META[r.s] || {label: r.s, color: "#6b7280"};
+  const dot = document.createElement("span"); dot.className = "dot"; dot.style.background = meta.color;
+  tdS.append(dot, meta.label);
+  const tdA = document.createElement("td"); tdA.className = "archive";
+  if (r.a) {
+    const av = document.createElement("a");
+    av.href = r.a; av.target = "_blank"; av.rel = "noopener"; av.textContent = "view ↗";
+    tdA.appendChild(av);
+  } else {
+    const none = document.createElement("span"); none.className = "none"; none.textContent = "—";
+    tdA.appendChild(none);
+  }
+  tr.append(tdM, tdC, tdU, tdS, tdA);
+  return tr;
+}
+
+function renderRows(start, end) {
+  const frag = document.createDocumentFragment();
+  for (let i = start; i < end; i++) frag.appendChild(buildRow(FILTERED[i]));
+  body.appendChild(frag);
+}
+
+function updateMoreUI() {
+  const total = FILTERED.length;
+  const hasMore = SHOWN < total;
+  if (tableArea) tableArea.classList.toggle("has-more", hasMore);
+  $("moreWrap").style.display = hasMore ? "" : "none";
+  if (hasMore) $("moreBtn").textContent = "Show " + fmt(Math.min(STEP, total - SHOWN)) + " more";
+  $("shownLabel").textContent = total
+    ? "Showing " + fmt(Math.min(SHOWN, total)) + " of " + fmt(total)
+    : "";
+  $("resultCount").innerHTML = QUERY || ACTIVE !== "all"
+    ? "<b>" + fmt(total) + "</b> matches"
+    : "<b>" + fmt(total) + "</b> records";
+}
+
+function render() {
+  body.textContent = "";
+  SHOWN = Math.min(INITIAL, FILTERED.length);
+  if (!FILTERED.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 5; td.className = "empty-row";
+    td.textContent = "No records match — try a different search.";
+    tr.appendChild(td);
+    body.appendChild(tr);
+  } else {
+    renderRows(0, SHOWN);
+  }
+  hideState();
+  updateMoreUI();
+}
+
+$("moreBtn").addEventListener("click", () => {
+  const next = Math.min(SHOWN + STEP, FILTERED.length);
+  renderRows(SHOWN, next);
+  SHOWN = next;
+  updateMoreUI();
+});
+
+let debounce;
+searchEl.addEventListener("input", () => {
+  clearTimeout(debounce);
+  debounce = setTimeout(() => { QUERY = searchEl.value.trim().toLowerCase(); applyFilters(); }, 120);
+});
+addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== searchEl) { e.preventDefault(); searchEl.focus(); }
+});
+
+loadIndex();
+</script>
+</body>
+</html>
