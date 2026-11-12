@@ -1,0 +1,72 @@
+{
+  "batch_size": 250,
+  "batches": [
+    {
+      "batch": 1053,
+      "file": "001053.html",
+      "first_url": "https://3asq.online/wp-content/uploads/WP-manga/data/manga_5ca3aa7f169e6/86416d1c034caa2b6ffb988a451871f7/03.png",
+      "images": 250,
+      "last_url": "https://3asq.online/wp-content/uploads/WP-manga/data/manga_5ca3ae7b1871b/843b18ec4afd3326260e162bfb3a8eae/09.jpg"
+    },
+    {
+      "batch": 1054,
+      "file": "001054.html",
+      "first_url": "https://3asq.online/wp-content/uploads/WP-manga/data/manga_5ca3afb485e7d/36c7bb7910a28a7fbcc5489ddcdfa1e3/11.jpg",
+      "images": 250,
+      "last_url": "https://3asq.online/wp-content/uploads/WP-manga/data/manga_617fb33cc2aba/30207563d8e6b30e3216b871f936cdcf/009.png"
+    },
+    {
+      "batch": 1055,
+      "file": "001055.html",
+      "first_url": "https://3asq.online/wp-content/uploads/WP-manga/data/manga_617fb33cc2aba/378c07bc11474e00cb3535036e946ebb/5.png",
+      "images": 250,
+      "last_url": "https://3asq.online/wp-content/uploads/WP-manga/data/manga_617fb33cc2aba/51c71f42a4147fc9c84b2d7da1f1698c/004.png"
+    },
+    {
+      "batch": 1056,
+      "file": "001056.html",
+      "first_url": "https://i.imgur.com/03mA15h.png",
+      "images": 250,
+      "last_url": "https://i.imgur.com/B78QR5u.jpg"
+    },
+    {
+      "batch": 1057,
+      "file": "001057.html",
+      "first_url": "https://i.imgur.com/B83qZQL.png",
+      "images": 250,
+      "last_url": "https://i.imgur.com/NCTKTwY.png"
+    },
+    {
+      "batch": 1058,
+      "file": "001058.html",
+      "first_url": "https://i.imgur.com/NFIcufs.jpg",
+      "images": 250,
+      "last_url": "https://i.imgur.com/YNhzMxJ.png"
+    },
+    {
+      "batch": 1059,
+      "file": "001059.html",
+      "first_url": "https://i.imgur.com/YPX7F2w.jpg",
+      "images": 250,
+      "last_url": "https://i.imgur.com/izkJRxT.jpg"
+    },
+    {
+      "batch": 1060,
+      "file": "001060.html",
+      "first_url": "https://i.imgur.com/j25uksb.jpg",
+      "images": 250,
+      "last_url": "https://i.imgur.com/uKA7Esm.jpg"
+    },
+    {
+      "batch": 1061,
+      "file": "001061.html",
+      "first_url": "https://i.imgur.com/uOj3SRz.png",
+      "images": 128,
+      "last_url": "https://i.imgur.com/zvC3iEq.jpg"
+    }
+  ],
+  "generated_at": "2026-07-20T06:12:22.725126+00:00",
+  "image_count": 2128,
+  "page_count": 9,
+  "start_batch": 1053
+}
