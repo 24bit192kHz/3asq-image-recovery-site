@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Privacy Policy for the 3asq Image Recovery Chrome extension.">
+  <title>Privacy Policy | 3asq Image Recovery</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">3</span>
+      <div>
+        <h1>Privacy Policy</h1>
+        <p>3asq Image Recovery</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap policy">
+    <p><strong>Last updated:</strong> July 18, 2026</p>
+
+    <h2>Purpose</h2>
+    <p>3asq Image Recovery is an independent Chrome extension that detects failed manga chapter images on supported 3asq domains and replaces them with exact, previously verified Wayback Machine copies when available.</p>
+
+    <h2>Data processed by the extension</h2>
+    <p>The extension reads the URLs and loading status of manga chapter images on supported 3asq domains. It does not read unrelated page content.</p>
+    <p>The extension checks a static archive URL map and domain registry hosted on this GitHub Pages site so newly verified captures and replacement 3asq domains can be used without waiting for a full extension release. GitHub receives the normal information associated with those HTTPS requests. The files contain public origins, image paths, and Wayback replay URLs only; they contain no user identifiers or executable code. If the remote map is unavailable or invalid, the extension uses its bundled map.</p>
+    <p>When a verified archived copy is available, the browser requests that image from <code>web.archive.org</code>. Internet Archive receives the normal information associated with a web request and handles it under its own privacy policy.</p>
+
+    <h2>Local storage</h2>
+    <p>The extension stores local counters for recovery attempts, successfully restored images, images without an archived copy, and archive loading failures. Current-page counters are stored for the browser session, while cumulative counters remain in local browser storage until the user resets them or removes the extension.</p>
+
+    <h2>Collection, sharing, and sale</h2>
+    <p>The developer does not operate a server that collects extension data. The extension does not transmit usage statistics to the developer and does not sell user data.</p>
+    <p>The extension contains no advertising, analytics, tracking tools, account system, or payment functionality. Data is not used or transferred for advertising, creditworthiness, lending, or purposes unrelated to restoring failed chapter images.</p>
+
+    <h2>Permissions</h2>
+    <p>The extension uses <code>storage</code> only for local recovery counters. Existing host access is limited to supported 3asq domains and is used only to detect and replace failed manga chapter images. Chrome cannot express a wildcard top-level domain such as <code>3asq.*</code>, so a newly registered replacement domain requires a one-time user-approved optional host permission for that exact origin. <code>activeTab</code> and <code>scripting</code> are used only from that popup activation flow to register the packaged recovery script on the approved domain.</p>
+
+    <h2>Remote code</h2>
+    <p>The extension does not execute remote code. All JavaScript and CSS are included in the extension package. Newly verified archive mappings are downloaded only as static JSON data and are validated before use. Images and JSON mappings are data, not executable code.</p>
+
+    <h2>User controls</h2>
+    <p>Users can reset cumulative statistics from the extension popup. Removing the extension deletes its locally stored data from Chrome.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>Material changes will be published on this page with an updated revision date.</p>
+
+    <h2>Contact</h2>
+    <p>For support or privacy questions, email <a href="mailto:24bit192khz@proton.me">24bit192khz@proton.me</a>.</p>
+
+    <p><a href="index.html">Return to the support page</a></p>
+  </main>
+
+  <footer>
+    <div class="wrap">3asq Image Recovery</div>
+  </footer>
+</body>
+</html>
